@@ -23,6 +23,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y openjdk-17-jdk
+          sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 1
+          sudo update-alternatives --config java
 
       - name: Install dependencies
         run: npm install
@@ -34,8 +36,7 @@ jobs:
         run: npm test
 
       - name: Install SonarQube Scanner
-        run: |
-          npm install -g sonar-scanner
+        run: npm install -g sonar-scanner
 
       - name: Check Java version
         run: java -version
@@ -52,8 +53,3 @@ jobs:
             -Dsonar.sources=src \
             -Dsonar.host.url=https://9000-port-e1825dfafca340bd.labs.kodekloud.com \
             -Dsonar.login=$SONAR_TOKEN
-
-
-
-
-
