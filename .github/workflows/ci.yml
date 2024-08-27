@@ -34,7 +34,14 @@ jobs:
         run: npm test
 
       - name: Install SonarQube Scanner
-        run: npm install -g sonar-scanner
+        run: |
+          npm install -g sonar-scanner
+
+      - name: Check Java version
+        run: java -version
+
+      - name: Check SonarQube Scanner version
+        run: sonar-scanner --version
 
       - name: SonarQube Scan
         env:
