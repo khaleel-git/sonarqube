@@ -24,7 +24,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y openjdk-17-jdk
           sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 1
-          sudo update-alternatives --config java
+          sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac 1
+          sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
+          sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
+
+      - name: Verify Java Version
+        run: |
+          java -version
+          javac -version
 
       - name: Install dependencies
         run: npm install
@@ -36,18 +43,18 @@ jobs:
         run: npm test
 
       - name: Install SonarQube Scanner
-        run: npm install -g sonar-scanner
-
-      - name: Check Java version
-        run: java -version
+        run: |
+          npm install -g sonar-scanner
 
       - name: Check SonarQube Scanner version
         run: sonar-scanner --version
 
-      - name: SonarQube Scan
+      - name: Set JAVA_HOME and Run SonarQube Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
+          export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+          export PATH=$JAVA_HOME/bin:$PATH
           sonar-scanner -X \
             -Dsonar.projectKey=my-node-app \
             -Dsonar.sources=src \
