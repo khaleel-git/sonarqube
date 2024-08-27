@@ -2,13 +2,13 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Use Ubuntu as GitHub Actions runner
 
     steps:
       - name: Checkout code
@@ -17,7 +17,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: '18'
 
       - name: Install dependencies
         run: npm install
@@ -29,6 +29,12 @@ jobs:
         run: npm test
 
       - name: SonarQube Scan
-        uses: sonarsource/sonarcloud-github-action@v2
-        with:
-          sonar-token: ${{ sqa_85c71b556b14f8d4095927292d398c2f559c6fcf }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          npm install -g sonar-scanner
+          sonar-scanner \
+            -Dsonar.projectKey=my-node-app \
+            -Dsonar.sources=src \
+            -Dsonar.host.url=https://your-sonarqube-server \
+            -Dsonar.login=$SONAR_TOKEN
