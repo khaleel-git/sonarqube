@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest # Use Ubuntu as GitHub Actions runner
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -19,22 +19,32 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Install Java 17
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-17-jdk
+
       - name: Install dependencies
         run: npm install
 
       - name: Build Docker image
         run: docker build . -t my-node-app
 
-      - name: Run tests now
+      - name: Run tests
         run: npm test
+
+      - name: Install SonarQube Scanner
+        run: npm install -g sonar-scanner
 
       - name: SonarQube Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          npm install -g sonar-scanner
           sonar-scanner \
             -Dsonar.projectKey=my-node-app \
             -Dsonar.sources=src \
-            -Dsonar.host.url=https://9000-port-e1825dfafca340bd.labs.kodekloud.com/ \
+            -Dsonar.host.url=https://9000-port-e1825dfafca340bd.labs.kodekloud.com \
             -Dsonar.login=$SONAR_TOKEN
+
+
+
