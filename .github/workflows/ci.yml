@@ -36,5 +36,5 @@ jobs:
           sonar-scanner \
             -Dsonar.projectKey=my-node-app \
             -Dsonar.sources=src \
-            -Dsonar.host.url=https://your-sonarqube-server \
+            -Dsonar.host.url=https://9000-port-e1825dfafca340bd.labs.kodekloud.com/ \
             -Dsonar.login=$SONAR_TOKEN
