@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Docker image
+        run: docker build . -t my-node-app
+
+      - name: Run tests
+        run: npm test
+
+      - name: SonarQube Scan
+        uses: sonarsource/sonarcloud-github-action@v2
+        with:
+          sonar-token: ${{ sqa_85c71b556b14f8d4095927292d398c2f559c6fcf }}
