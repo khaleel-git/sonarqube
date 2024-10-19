@@ -12,6 +12,5 @@ jobs:
             - name: List files
               run: ls
 
-            - name: Read file
+            - name: Read files
               run: cat Dockerfile
-              
